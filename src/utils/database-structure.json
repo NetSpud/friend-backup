@@ -1,0 +1,57 @@
+{
+  "data-folder": "C:\\Users\\hengi\\AppData\\Roaming\\Friend-Backup/remoteFiles",
+  "socket-port": 3001,
+  "remote-credentials": [
+    {
+      "userID": "lbQJYfG4az",
+      "passcode": "nt4kRPTAwM8UEkAQqCmUzG2BkgPpqs7lAoMgxG1GvxI_TtkM2ZRDgCEE1_Pise5Xcqhgb9iKYZ7xkbSDv_RjwN7ClAAQDwVSwBr2zL0taJfxGQYZSZh_o4Dgsc04r1W2r9F8HVT56uN77WEBJDl4O89OsHDuPCFuIlsXmlVA6qpw1gTJ4LPCDT2k-rcLfnV4NLwrjXT_zndVNQA2Fsnz1TJyN71ZLvTa-hU2AGT8MFIFeL34W3OeU4hflXWIzJ3"
+    },
+    {
+      "userID": "AXlPImcmhP",
+      "passcode": "Zu2BBINctPFxfzpTxWIclsg1KrL37tUmTQ2fvEq7NOJkz2Pk_wxvQIUEH3ldOktfSxIB1DugB2RiFR3NqUTWJasdJyt75fWGHz633vP6CbPnRcB9TkEbbL6ioaBOeanOeKxeC2GbNyBzhhyzvDNuVQlyOuZxvf46qC1Mi4jMHAfF_XEvp0ODQr4F-ejIUxitmNHsL8gHo8otyHHavq1V5feFqGoPA8qOjKAyZm8Ooo6_RaMHFf8TeshUrR2Q8Xj"
+    }
+  ],
+  "remote-files": [
+    {
+      "storedOn": "3_qLiHmXlZ",
+      "originFilePath": "C:\\Users\\hengi\\Downloads\\FileZilla_3.56.0_win64-setup.exe"
+    },
+    {
+      "storedOn": "3_qLiHmXlZ",
+      "chunks": [
+        {
+          "original": "FileZilla_3.56.0_win64-setup.exe.sf-part1",
+          "encrypted": "OW12KpgQYEhbeVwuEYZoDeKvNWmYHE.pgp"
+        },
+        {
+          "original": "FileZilla_3.56.0_win64-setup.exe.sf-part2",
+          "encrypted": "-gTTNxQSZYOM2cn5dCTEr_tLSsSaoH.pgp"
+        },
+        {
+          "original": "FileZilla_3.56.0_win64-setup.exe.sf-part3",
+          "encrypted": "LQtw5tRDNNbo4AklPhs2RcmQ0UMJa9.pgp"
+        }
+      ],
+      "originFilePath": "C:\\Users\\hengi\\Downloads\\FileZilla_3.56.0_win64-setup.exe"
+    }
+  ],
+  "internal-files": [],
+  "encryption-keys": {
+    "public": "-----BEGIN PGP PUBLIC KEY BLOCK-----\n\nxjMEYXbwwhYJKwYBBAHaRw8BAQdAiKZ6gd1ra0kHESqyyszZ1tzEG4IX/aHW\nNVYHtuootDjNG0pvbiBTbWl0aCA8am9uQGV4YW1wbGUuY29tPsKMBBAWCgAd\nBQJhdvDCBAsJBwgDFQgKBBYAAgECGQECGwMCHgEAIQkQpQk5NcTgGOgWIQSE\nNndm3RBX9LYPmVmlCTk1xOAY6AbmAQC/6mLaPcRjhu46dWaGz2d6j+MQVtgv\nWKfN2BM6LHkUaQD/bUNnsCfKcd5v1AdQ/ZpI1gzQFBm+D/srynhdrX9jPQ7O\nOARhdvDCEgorBgEEAZdVAQUBAQdAf3XT6CTbRmYvYHQOp+0FIwppkzl0UzG0\nGyhT6ItzIH4DAQgHwngEGBYIAAkFAmF28MICGwwAIQkQpQk5NcTgGOgWIQSE\nNndm3RBX9LYPmVmlCTk1xOAY6Nz6AQCAXLpTLuUlU01mLyArly52uzTh8eH2\nXgFuY37LN7qeDQEA7SmG+lhQ0NuM9zHBn4U/075ZPeqsV9F3dgqKPvlv2gE=\n=E1Lz\n-----END PGP PUBLIC KEY BLOCK-----\n",
+    "private": "-----BEGIN PGP PRIVATE KEY BLOCK-----\n\nxVgEYXbwwhYJKwYBBAHaRw8BAQdAiKZ6gd1ra0kHESqyyszZ1tzEG4IX/aHW\nNVYHtuootDgAAP99N3eenbVPJmubYicdM6ueP7p377Zxl/mq6dHCChuN2xGA\nzRtKb24gU21pdGggPGpvbkBleGFtcGxlLmNvbT7CjAQQFgoAHQUCYXbwwgQL\nCQcIAxUICgQWAAIBAhkBAhsDAh4BACEJEKUJOTXE4BjoFiEEhDZ3Zt0QV/S2\nD5lZpQk5NcTgGOgG5gEAv+pi2j3EY4buOnVmhs9neo/jEFbYL1inzdgTOix5\nFGkA/21DZ7AnynHeb9QHUP2aSNYM0BQZvg/7K8p4Xa1/Yz0Ox10EYXbwwhIK\nKwYBBAGXVQEFAQEHQH910+gk20ZmL2B0DqftBSMKaZM5dFMxtBsoU+iLcyB+\nAwEIBwAA/2eHxC8c31ESbyPOayq3RzbehiS9KnTgjYIalD02zl/gD2fCeAQY\nFggACQUCYXbwwgIbDAAhCRClCTk1xOAY6BYhBIQ2d2bdEFf0tg+ZWaUJOTXE\n4Bjo3PoBAIBculMu5SVTTWYvICuXLna7NOHx4fZeAW5jfss3up4NAQDtKYb6\nWFDQ24z3McGfhT/Tvlk96qxX0Xd2Coo++W/aAQ==\n=6N8C\n-----END PGP PRIVATE KEY BLOCK-----\n"
+  },
+  "machine-id": "hUu6ClST5N7Q",
+  "user-id": "M1LJpAGWXvNdrX3a66sYw7eam-tlrbeI",
+  "machines": [
+    {
+      "id": "3_qLiHmXlZ",
+      "ip": "localhost",
+      "port": 3001,
+      "alias": "123",
+      "credentials": {
+        "userID": "AXlPImcmhP",
+        "passcode": "Zu2BBINctPFxfzpTxWIclsg1KrL37tUmTQ2fvEq7NOJkz2Pk_wxvQIUEH3ldOktfSxIB1DugB2RiFR3NqUTWJasdJyt75fWGHz633vP6CbPnRcB9TkEbbL6ioaBOeanOeKxeC2GbNyBzhhyzvDNuVQlyOuZxvf46qC1Mi4jMHAfF_XEvp0ODQr4F-ejIUxitmNHsL8gHo8otyHHavq1V5feFqGoPA8qOjKAyZm8Ooo6_RaMHFf8TeshUrR2Q8Xj"
+      }
+    }
+  ]
+}
