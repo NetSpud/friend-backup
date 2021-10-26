@@ -3,7 +3,6 @@ const path = require("path");
 const splitFile = require("./utils/split-file.js");
 const { nanoid } = require("nanoid");
 const fs = require("fs");
-const os = require("os");
 const { WebSocketServer, WebSocket } = require("ws");
 const userFolder = app.getPath("userData");
 const Store = require("electron-store");
