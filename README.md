@@ -1,4 +1,5 @@
 # friend-backup
+
 A way of backing up your data using your friends PCs'.
 
 TODO:
@@ -8,3 +9,4 @@ TODO:
 - [ ] Be able to upload a folder/file to multiple machines at the same time.
 - [ ] Measure upload/download/ping speeds on remote machines.
 - [ ] Set a limit to how many files can be on a machine in total to prevent a machine from being completely overloaded with files.
+- [ ] Delete machines functionality.
