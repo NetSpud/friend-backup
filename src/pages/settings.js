@@ -6,11 +6,13 @@ export default class extends React.Component {
     this.state = {
       outputFolder: "",
       socketPort: "",
+      storageSize: 32,
     };
     this.formSubmit = this.formSubmit.bind(this);
     this.setOutputFolder = this.setOutputFolder.bind(this);
     this.getSettings = this.getSettings.bind(this);
     this.setSocketPort = this.setSocketPort.bind(this);
+    this.setMaxFilesSize = this.setMaxFilesSize.bind(this);
     this.setErr = this.setErr.bind(this);
   }
 
@@ -20,7 +22,7 @@ export default class extends React.Component {
 
   formSubmit(e) {
     e.preventDefault();
-    window.server.send("saveSettings", { path: this.state.outputFolder, socketPort: this.state.socketPort });
+    window.server.send("saveSettings", { path: this.state.outputFolder, socketPort: this.state.socketPort, storageSize: this.state.storageSize });
     window.server.subscribe("saveSettings", (event, arg) => {
       console.log(event);
       if (event.err) {
@@ -44,11 +46,15 @@ export default class extends React.Component {
     this.setState({ socketPort: e.target.value });
   }
 
+  setMaxFilesSize(e) {
+    this.setState({ storageSize: e.target.value });
+  }
+
   getSettings() {
     window.server.send("getSettings");
     window.server.subscribe("getSettings", (event, arg) => {
       console.log(event);
-      this.setState({ outputFolder: event.remoteFilesFolder, socketPort: event.socketPort });
+      this.setState({ outputFolder: event.remoteFilesFolder, socketPort: event.socketPort, storageSize: event.storageSize });
     });
   }
 
@@ -100,6 +106,17 @@ export default class extends React.Component {
                     <input
                       onChange={this.setSocketPort}
                       value={this.state.socketPort}
+                      className="shadow-md appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      placeholder="eg: E:\remote-store"
+                      type="number"
+                    />
+                    <div className="text-red-500 text-center pt-3">{this.state.err}</div>
+                  </div>
+                  <div>
+                    <label className="text-white block">Maximum amount of files that can be stored (in gigabytes)</label>
+                    <input
+                      onChange={this.setMaxFilesSize}
+                      value={this.state.storageSize}
                       className="shadow-md appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                       placeholder="eg: E:\remote-store"
                       type="number"
