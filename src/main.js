@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, session } = require("electron");
 const path = require("path");
 const splitFile = require("./utils/split-file.js");
 const { nanoid } = require("nanoid");
@@ -9,7 +9,7 @@ const Store = require("electron-store");
 const store = new Store();
 
 const encryptFiles = require("./utils/encrypt-files.js");
-const { bootWebsocketServer, checkFiles, checkIfMachines, checkIfID, checkPermissions, checkDatabase } = require("./utils/startup-checks");
+const { checkFiles, checkIfMachines, checkIfID, checkPermissions, checkDatabase } = require("./utils/startup-checks");
 
 const wss = new WebSocketServer({
   port: store.get("socket-port") || 3001,
@@ -29,6 +29,7 @@ const createWindow = () => {
     minWidth: 700,
     icon: "./public/favicon.ico",
     webPreferences: {
+      sandbox: true,
       nodeIntegration: false,
       contextIsolation: true,
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
@@ -41,6 +42,14 @@ const createWindow = () => {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
   startupChecks();
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        "Content-Security-Policy": [`default-src 'self' localhost:3000 ws://localhost:${store.get("socket-port") || 3001} 'unsafe-inline' 'unsafe-eval' data: devtools://devtools/bundled/core/host/host.js`],
+      },
+    });
+  });
 };
 
 // This method will be called when Electron has finished
@@ -174,6 +183,7 @@ const removeOldFiles = (files) => {
 };
 
 wss.on("connection", (ws) => {
+  console.log("connected to websocket");
   const checkCredentials = (credentials) => {
     console.log("checkCredentials()");
     return new Promise((resolve, reject) => {
@@ -266,8 +276,8 @@ ipcMain.on("saveSettings", (e, a) => {
     store.set("data-folder", a.path);
   }
 
-  console.log("setting websocket port");
   store.set("socket-port", Number(a.socketPort));
+  store.set("machine-size", Number(a.storageSize));
   e.reply("saveSettings", { success: true });
 });
 ipcMain.on("getSettings", (e, a) => {
@@ -276,6 +286,7 @@ ipcMain.on("getSettings", (e, a) => {
   const settings = {
     remoteFilesFolder: store.get("data-folder"),
     socketPort: store.get("socket-port"),
+    storageSize: store.get("machine-size"),
   };
 
   e.reply("getSettings", settings);
