@@ -109,7 +109,7 @@
     "@headlessui/react": "^1.4.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.0.0",
-    "node-ipc": "^10.1.0",
+    "fast-folder-size": "^1.5.0",
     "openpgp": "^5.0.0",
     "postcss-loader": "^6.1.1",
     "react": "^17.0.2",
