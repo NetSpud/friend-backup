@@ -16,18 +16,6 @@ const createFolder = (path) => {
   });
 };
 
-const bootWebsocketServer = () => {
-  return new Promise((resolve, reject) => {
-    try {
-      // const wss = new WebSocketServer({
-      //   port: 3000,
-      // });
-    } finally {
-      resolve(true);
-    }
-  });
-};
-
 const checkFiles = () => {
   return new Promise((resolve, reject) => {
     fs.promises
@@ -59,6 +47,9 @@ const checkFiles = () => {
         }
         if (!store.get("machine-id")) {
           store.set("machine-id", nanoid(12));
+        }
+        if (!store.get("machine-size")) {
+          store.set("machine-size", 32);
         }
       })
       .then(() => resolve(true))
@@ -99,4 +90,4 @@ const checkIfMachines = () => {
   });
 };
 
-module.exports = { bootWebsocketServer, checkFiles, checkIfMachines, checkIfID, checkPermissions, checkDatabase };
+module.exports = { checkFiles, checkIfMachines, checkIfID, checkPermissions, checkDatabase };
