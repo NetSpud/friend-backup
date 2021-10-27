@@ -23,8 +23,6 @@ const FetchMachines = () => {
   } else if (!isLoaded) {
     return <div>Loading...</div>;
   } else {
-    console.log("mapping");
-
     return (
       <>
         {items.map((item, i) => (
@@ -43,7 +41,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="bg-red-500 flex flex-grow p-3">
-        <div className="py-5 bg-gray-900 h-auto px-5 rounded-xl w-full lg:w-9/12 grid grid-rows-6 mx-auto">
+        <div className="py-5 bg-gray-900 h-auto px-5 rounded-xl w-full lg:w-9/12 grid grid-rows-6 mx-auto overflow-auto">
           <div className="text-center">
             <h1 className="text-white text-4xl font-extrabold">Remote Files</h1>
           </div>
