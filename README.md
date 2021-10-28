@@ -27,7 +27,7 @@ npm install/yarn install
 
 To start, run `yarn start` or `npm start`
 
-To build, run `yarn make` or `npm run make`. This will output in a directory called `out`
+To build, run `yarn make` or `npm run make`. This will output in a directory called `out/`
 
 Ports used:
 
