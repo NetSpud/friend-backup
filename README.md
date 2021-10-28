@@ -6,7 +6,7 @@ Encrypted with [openpgp](https://www.npmjs.com/package/openpgp)
 
 Encrypted files are split into 5mb chunks
 
-No servers are involved in the transfer process, except for updating the actual application.
+No servers are involved in the transfer process, the only time a server is used is to update the electron app itself.
 
 TODO:
 
