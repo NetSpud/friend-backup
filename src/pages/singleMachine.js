@@ -1,6 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import { useLocation } from "react-router-dom";
 const Page = () => {
+  const urlParams = new URLSearchParams(useLocation().search);
+  const id = urlParams.get("id");
   return (
     <>
       <div className="bg-red-500 flex flex-grow p-3">
@@ -11,7 +14,7 @@ const Page = () => {
               <FontAwesomeIcon icon="desktop" size="4x" className="text-white" />
               <div className="absolute bg-green-500 w-3 h-3 rounded-full top-minus-7 right-minus-10"></div>
             </div>
-            <span className="block text-white mt-2">EDWARD-PC-R7</span>
+            <span className="block text-white mt-2">{id}</span>
           </div>
           <div className="bg-blue-900 h-32 mx-auto rounded-md p-3 text-white font-semibold w-full max-w-xs text-sm">
             <ul className="list-disc list-inside">
