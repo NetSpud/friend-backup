@@ -39,9 +39,9 @@ import App from "./app";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fab } from "@fortawesome/free-brands-svg-icons";
 import { faCoffee, faDesktop } from "@fortawesome/free-solid-svg-icons";
-import { fas } from "@fortawesome/free-solid-svg-icons";
+import { faList, faUserAlt, faFolderOpen, faPlus, faCog, faSignOutAlt, faTh, faEllipsisV, faFile } from "@fortawesome/free-solid-svg-icons";
 
-library.add(fab, fas, faDesktop, faCoffee);
+library.add(fab, faDesktop, faCoffee, faList, faUserAlt, faFolderOpen, faPlus, faCog, faSignOutAlt, faTh, faEllipsisV, faFile);
 
 ReactDOM.render(
   <React.StrictMode>
