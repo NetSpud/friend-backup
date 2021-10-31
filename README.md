@@ -17,6 +17,7 @@ TODO:
 - [ ] Set a limit to how many files can be on a machine in total to prevent a machine from being completely overloaded with files.
 - [ ] Delete machines functionality.
 - [ ] File viewing structure for remote machines
+- [ ] Check machine status (online, offline etc)
 
 ## Usage
 
