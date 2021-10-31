@@ -16,6 +16,7 @@ TODO:
 - [ ] Measure upload/download/ping speeds on remote machines.
 - [ ] Set a limit to how many files can be on a machine in total to prevent a machine from being completely overloaded with files.
 - [ ] Delete machines functionality.
+- [ ] File viewing structure for remote machines
 
 ## Usage
 
