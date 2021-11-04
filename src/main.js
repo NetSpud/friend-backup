@@ -4,6 +4,7 @@ const splitFile = require("./utils/split-file.js");
 const { nanoid } = require("nanoid");
 const fs = require("fs");
 const { WebSocketServer, WebSocket } = require("ws");
+const ping = require("ping");
 const userFolder = app.getPath("userData");
 const Store = require("electron-store");
 const store = new Store();
@@ -182,6 +183,21 @@ const removeOldFiles = (files) => {
   });
 };
 
+const getMachineInfo = (id) => {
+  return new Promise((resolve, reject) => {
+    const machine = store.get("machines").find((m) => m.id === id);
+
+    ping.promise.probe(machine.ip).then((res) => {
+      if (res.alive) {
+        machine.status = true;
+      } else {
+        machine.status = false;
+      }
+      resolve(machine);
+    });
+  });
+};
+
 wss.on("connection", (ws) => {
   console.log("connected to websocket");
   const checkCredentials = (credentials) => {
@@ -346,4 +362,16 @@ ipcMain.on("remote-files", (e, a) => {
   console.log("IPC: remote-files");
   const files = store.get("remote-files");
   e.reply("remote-files", files);
+});
+
+ipcMain.on("machine-info", (e, a) => {
+  console.log("IPC: machine-info");
+  getMachineInfo(a.id)
+    .then((info) => {
+      delete info.credentials;
+      e.reply("machine-info", info);
+    })
+    .catch((err) => {
+      e.reply("machine-info", { err: err });
+    });
 });
