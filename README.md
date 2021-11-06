@@ -34,7 +34,7 @@ To build, run `yarn make` or `npm run make`. This will output in a directory cal
 Ports used:
 
 - UI: 3000
-- Websocket: 3001 (can be changed in settings)
+- Websocket: 3001 (can be changed in settings, but requires reboot)
 
 ## Libraries/Tools used
 
