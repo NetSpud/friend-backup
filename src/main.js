@@ -5,13 +5,13 @@ const { nanoid } = require("nanoid");
 const fs = require("fs");
 const { WebSocketServer, WebSocket } = require("ws");
 const ping = require("ping");
+
 const userFolder = app.getPath("userData");
 const Store = require("electron-store");
 const store = new Store();
 
 const encryptFiles = require("./utils/encrypt-files.js");
 const { checkFiles, checkIfMachines, checkIfID, checkPermissions, checkDatabase } = require("./utils/startup-checks");
-
 const wss = new WebSocketServer({
   port: store.get("socket-port") || 3001,
 });
@@ -180,6 +180,7 @@ const removeOldFiles = (files) => {
         if (err) reject(err);
       });
     }
+    resolve(true);
   });
 };
 
@@ -199,12 +200,10 @@ const getMachineInfo = (id) => {
 };
 
 wss.on("connection", (ws) => {
-  console.log("connected to websocket");
   const checkCredentials = (credentials) => {
     console.log("checkCredentials()");
     return new Promise((resolve, reject) => {
       if (store.get("remote-credentials").filter((x) => x.userID === credentials.userID && x.passcode === credentials.passcode).length > 0) {
-        console.log("Valid credentials!");
         resolve(true);
       } else {
         reject({ msg: "Invalid credentials.", status: 401 });
@@ -279,6 +278,9 @@ ipcMain.on("split", (e, a) => {
       })
       .then((files) => {
         return removeOldFiles(files);
+      })
+      .then(() => {
+        e.reply("split", { success: true });
       })
       .catch((err) => console.error(err));
   }

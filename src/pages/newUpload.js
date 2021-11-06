@@ -53,6 +53,8 @@ export default class Page extends React.Component {
     this.state = {
       machine: "",
       files: [],
+      uploaded: false,
+      error: "",
     };
     this.setFiles = this.setFiles.bind(this);
     this.setMachine = this.setMachine.bind(this);
@@ -69,11 +71,13 @@ export default class Page extends React.Component {
   }
   upload() {
     window.server.send("split", { files: this.state.files, machine: this.state.machine });
-    window.server.subscribe("split-res", (event, args) => {
+    window.server.subscribe("split", (event, args) => {
       if (event.err) {
         this.setState({ error: event.err });
       } else {
         //handle success message
+        this.setState({ uploaded: true });
+        console.log(event);
       }
     });
   }
@@ -114,6 +118,7 @@ export default class Page extends React.Component {
                   Upload
                 </button>
                 <div className="text-red-600">{this.state.error}</div>
+                <div className="text-green-600">{this.state.uploaded ? "Files uploaded successfully" : ""}</div>
               </div>
             </div>
             <div className="text-left self-end">
