@@ -20,6 +20,7 @@ TODO:
 - [ ] Check machine status (online, offline etc)
 
 ## Usage
+Tested and built on Node `V16`
 
 To run locally, download all files, navigate into the directory and run
 
