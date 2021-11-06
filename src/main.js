@@ -282,7 +282,10 @@ ipcMain.on("split", (e, a) => {
       .then(() => {
         e.reply("split", { success: true });
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        e.reply("split", { err: err });
+        console.error(err);
+      });
   }
 });
 ipcMain.on("saveSettings", (e, a) => {
