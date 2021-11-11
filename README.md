@@ -18,6 +18,7 @@ TODO:
 - [ ] Delete machines functionality.
 - [ ] File viewing structure for remote machines
 - [ ] Check machine status (online, offline etc)
+- [ ] Check machine stats (ping, upload, download etc) and be able to re-check every 24 hours etc
 
 ## Usage
 
