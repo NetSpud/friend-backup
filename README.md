@@ -21,6 +21,7 @@ TODO:
 - [ ] Check machine stats (ping, upload, download etc) and be able to re-check every 24 hours etc
 
 ## Usage
+Tested and built on Node `V16`
 
 To run locally, download all files, navigate into the directory and run
 
