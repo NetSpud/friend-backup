@@ -5,6 +5,13 @@ import { Link } from "react-router-dom";
 const iconClasses = "block transition-all ease-linear bg-gray-800 hover:rounded-xl hover:bg-gray-900 cursor-pointer rounded-3xl fit-content text-center";
 
 class Sidebar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.shutdown = this.shutdown.bind(this);
+  }
+  shutdown() {
+    window.server.send("shutdown", "");
+  }
   render() {
     return (
       <div className="bg-blue-900 flex flex-col">
@@ -28,7 +35,7 @@ class Sidebar extends React.Component {
         <div className="bg-gray-800 mt-auto h-30 text-center text-white py-3">
           <div>Stored: 100GB</div>
         </div>
-        <div className="h-20 text-center bg-blue-900 p-6">
+        <div className="h-20 text-center bg-blue-900 p-6" onClick={this.shutdown}>
           <FontAwesomeIcon className="text-3xl text-white cursor-pointer transition duration-200 ease-in-out hover:text-black" icon="sign-out-alt" />
         </div>
       </div>
