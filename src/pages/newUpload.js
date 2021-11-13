@@ -72,8 +72,9 @@ export default class Page extends React.Component {
   upload() {
     window.server.send("split", { files: this.state.files, machine: this.state.machine });
     window.server.subscribe("split", (event, args) => {
-      if (event.err) {
-        this.setState({ error: event.err });
+      if (event.error) {
+        console.log(event);
+        this.setState({ error: String(event.error) });
       } else {
         //handle success message
         this.setState({ uploaded: true });
