@@ -25,7 +25,7 @@ if (require("electron-squirrel-startup")) {
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 2500,
+    width: 1500,
     height: 1000,
     minWidth: 700,
     icon: "./public/favicon.ico",
@@ -132,15 +132,16 @@ const getMachine = (id) => {
   });
 };
 
-const sendFilesToMachine = (files, socketAddress, machineInfo) => {
+const sendFilesToMachine = (file, socketAddress, machineInfo) => {
   return new Promise((resolve, reject) => {
     const ws = new WebSocket(`ws://${socketAddress}`);
     ws.on("open", () => {
       console.log("Socket established.");
-      for (let i = 0; i < files.length; i++) {
-        const el = files[i];
+      for (let i = 0; i < file.chunks.length; i++) {
+        const el = file.chunks[i];
         const message = {
           type: "transfer",
+          id: file.id,
           data: {
             filename: path.basename(el.encrypted),
             fileData: fs.readFileSync(el.encrypted),
@@ -149,22 +150,29 @@ const sendFilesToMachine = (files, socketAddress, machineInfo) => {
         };
         ws.send(JSON.stringify(message));
       }
-      resolve(files);
+    });
+    ws.on("close", () => {
+      console.log("Socket closed.");
+      resolve(file);
     });
   });
 };
 
-const updateDatabase = (files, originFilePath, machineInfo) => {
+const updateDatabaseLocal = (file, originFilePath, machineInfo) => {
+  console.log("updateDatabaseLocal()");
   return new Promise((resolve, reject) => {
-    const remoteFiles = store.get("remote-files");
-    const mappedFiles = files.map((item) => {
+    const remoteFiles = store.get("internal-files");
+    console.log(file);
+    const mappedFiles = file.chunks.map((item) => {
       item.original = path.basename(item.original);
       item.encrypted = path.basename(item.encrypted);
       return item;
     });
-    remoteFiles.push({ storedOn: machineInfo.id, chunks: mappedFiles, originFilePath: originFilePath, originalFilename: path.basename(originFilePath) });
-    store.set("remote-files", remoteFiles);
-    resolve(files);
+    const obj = { storedOn: machineInfo.id, fileID: file.id, chunks: mappedFiles, originFilePath: file.original, originFilename: path.basename(file.original), storedAt: Date.now() };
+
+    remoteFiles.push(obj);
+    store.set("internal-files", remoteFiles);
+    resolve(file);
   });
 };
 
@@ -172,7 +180,6 @@ const removeOldFiles = (files) => {
   return new Promise((resolve, reject) => {
     for (let i = 0; i < files.length; i++) {
       const el = files[i];
-      console.log(el);
       fs.unlink(userFolder + "/tmp/" + el.original, (err) => {
         if (err) reject(err);
       });
@@ -201,7 +208,6 @@ const getMachineInfo = (id) => {
 
 wss.on("connection", (ws) => {
   const checkCredentials = (credentials) => {
-    console.log("checkCredentials()");
     return new Promise((resolve, reject) => {
       if (store.get("remote-credentials").filter((x) => x.userID === credentials.userID && x.passcode === credentials.passcode).length > 0) {
         resolve(true);
@@ -218,6 +224,25 @@ wss.on("connection", (ws) => {
       fs.writeFile(filename, data, (err) => {
         resolve(true);
       });
+    });
+  };
+
+  const updateRemoteDatabase = (fileData) => {
+    return new Promise((resolve, reject) => {
+      const remoteFiles = store.get("remote-files");
+      const existing = remoteFiles.filter((x) => x.id === fileData.id);
+
+      if (existing.length > 0) {
+        existing[0].chunks.push({ filename: fileData.data.filename });
+      } else {
+        const obj = {
+          id: fileData.id,
+          chunks: [{ filename: fileData.data.filename }],
+        };
+        remoteFiles.push(obj);
+      }
+      store.set("remote-files", remoteFiles);
+      resolve(true);
     });
   };
 
@@ -243,50 +268,53 @@ wss.on("connection", (ws) => {
             return saveFile(messageData.data); //todo: avoid having to connect to the websocket to transfer each chunk
           })
           .then(() => {
+            return updateRemoteDatabase(messageData);
+          })
+          .then(() => {
             console.log("saved file", messageData.data.filename);
+            ws.close();
           })
           .catch((err) => ws.send(JSON.stringify({ type: "error", res: err.msg, status: err.status })));
-
-        break;
-      case "save-transfer-files":
-        //todo, implement a way of updating the database with the encrypted files on the remote end.
         break;
     }
   });
 });
 
-ipcMain.on("split", (e, a) => {
+ipcMain.on("split", async (e, a) => {
   console.log("IPC: split");
+  const files = [];
+  const machineInfo = await getMachine(a.machine);
+  a.files.forEach((file) => {
+    files.push({ original: path.resolve(file.path), id: nanoid(12) });
+  });
 
-  for (let i = 0; i < a.files.length; i++) {
-    const el = a.files[i];
-    separateFiles(el.path, 1024 * 1024 * 5)
-      .then((files) => {
+  files.forEach((file) => {
+    separateFiles(file.original, 1024 * 1024 * 5)
+      .then((fileChunks) => {
         const publicKey = store.get("encryption-keys.public");
         const privateKey = store.get("encryption-keys.private");
         const output = userFolder + "\\" + "/tmp";
 
-        return encryptFiles(files, publicKey, privateKey, output);
+        return encryptFiles(fileChunks, publicKey, privateKey, output);
       })
-      .then(async (files) => {
-        const machineInfo = await getMachine(a.machine);
-        return sendFilesToMachine(files, `${machineInfo.ip}:${machineInfo.port}`, machineInfo);
-      })
-      .then(async (files) => {
-        const machineInfo = await getMachine(a.machine);
-        return updateDatabase(files, el.path, machineInfo);
-      })
-      .then((files) => {
-        return removeOldFiles(files);
+      .then((encryptedFiles) => {
+        file.chunks = encryptedFiles;
       })
       .then(() => {
-        e.reply("split", { success: true });
+        return sendFilesToMachine(file, `${machineInfo.ip}:${machineInfo.port}`, machineInfo);
+      })
+      .then(() => {
+        console.log(a.files[0].path);
+        return updateDatabaseLocal(file, "", machineInfo);
+      })
+      .then(() => {
+        console.log("hopefully completed!");
       })
       .catch((err) => {
-        e.reply("split", { err: err });
         console.error(err);
+        e.reply("split", { error: err });
       });
-  }
+  });
 });
 ipcMain.on("saveSettings", (e, a) => {
   console.log("IPC: saveSettings");
@@ -315,7 +343,7 @@ ipcMain.on("getSettings", (e, a) => {
 ipcMain.on("new-machine", (e, a) => {
   console.log("IPC: new-machine");
   try {
-    const ws = new WebSocket(`ws://${a.ip}:${a.port}`); //connecting to localhost, change as required
+    const ws = new WebSocket(`ws://${a.ip}:${a.port}`);
 
     ws.on("message", (msg) => {
       const messageData = JSON.parse(msg);
@@ -344,8 +372,6 @@ ipcMain.on("new-machine", (e, a) => {
       if (ws._readyState) {
         ws.send(JSON.stringify({ type: "firstTime", code: a.code }));
       }
-
-      //   // ws.send("example message to dev client");
     });
   } catch (err) {
     if (err.message) {
@@ -363,10 +389,10 @@ ipcMain.on("all-machines", (e, a) => {
     e.reply("all-machines", { err: error });
   }
 });
-ipcMain.on("remote-files", (e, a) => {
-  console.log("IPC: remote-files");
-  const files = store.get("remote-files");
-  e.reply("remote-files", files);
+ipcMain.on("internal-files", (e, a) => {
+  console.log("IPC: internal-files");
+  const files = store.get("internal-files");
+  e.reply("internal-files", files);
 });
 
 ipcMain.on("machine-info", (e, a) => {
@@ -379,4 +405,27 @@ ipcMain.on("machine-info", (e, a) => {
     .catch((err) => {
       e.reply("machine-info", { err: err });
     });
+});
+
+ipcMain.on("request-file", (e, a) => {
+  console.log("IPC: request-file");
+  const fileData = store.get("remote-files").find((f) => f.id === a.fileID);
+  const machine = store.get("machines").find((m) => m.id === fileData.storedOn);
+
+  const ws = new WebSocket(`ws://${machine.ip}:${machine.port}`);
+  ws.on("open", () => {
+    console.log("connected to remote socket");
+    const message = {
+      type: "request-file",
+      data: {
+        filename: path.basename(el.encrypted),
+        fileData: fs.readFileSync(el.encrypted),
+      },
+      credentials: machineInfo.credentials,
+    };
+  });
+});
+
+ipcMain.on("shutdown", (e, a) => {
+  app.quit();
 });
