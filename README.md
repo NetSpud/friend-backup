@@ -1,6 +1,6 @@
 # friend-backup
 
-A way of backing up your data using your friends PCs'.
+A way of backing up your data using your friends' PCs.
 
 Encrypted with [openpgp](https://www.npmjs.com/package/openpgp)
 
